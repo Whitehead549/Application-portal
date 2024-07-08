@@ -84,12 +84,11 @@ const Home = () => {
     const currentUser = auth.currentUser;
     if (currentUser) {
       const cartQuery = query(collection(db, 'Cart' + currentUser.uid), where("uid", "==", currentUser.uid));
-      onSnapshot(cartQuery, (snap) => {
-        const newCartProducts = snap.docs.map((doc) => doc.data());
-        setCartProducts(newCartProducts);
-        const totalQty = newCartProducts.reduce((accumulator, currentValue) => accumulator + currentValue.qty, 0);
-        setTotalQty(totalQty);
-      });
+      const snap = await getDocs(cartQuery);
+      const newCartProducts = snap.docs.map((doc) => doc.data());
+      setCartProducts(newCartProducts);
+      const totalQty = newCartProducts.reduce((accumulator, currentValue) => accumulator + currentValue.qty, 0);
+      setTotalQty(totalQty);
     } else {
       console.log('User is not signed in to retrieve cart');
     }
@@ -134,9 +133,7 @@ const Home = () => {
           console.log('User already registered:', userUid);
         }
 
-        await getProducts();
-        await getCurrentUser(userUid);
-        await fetchCartProducts();
+        await Promise.all([getProducts(), getCurrentUser(userUid), fetchCartProducts()]);
       } catch (error) {
         console.error('Error in registration or fetching data:', error);
       } finally {
@@ -190,3 +187,4 @@ const Home = () => {
 };
 
 export default Home;
+
