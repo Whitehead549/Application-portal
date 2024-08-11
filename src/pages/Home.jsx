@@ -53,10 +53,16 @@ const Home = () => {
         
       
         <>
-        <div className='relative h-[400px]'>
-          <img src={MainImage} alt="Description" className="absolute inset-0 w-full h-full object-fit" />
-          <Hero />
-        </div>
+        <div className="relative h-[46vh] md:h-[36vh] lg:h-[70vh] sm:h-[60vh]">
+  <img
+    src={MainImage}
+    alt="Description"
+    className="absolute inset-0 w-full h-full object-fit lg:pt-16  "
+  />
+  <Hero />
+</div>
+
+
            
            <div className='pt-2 bg-night-sky'>
           <Places  />
