@@ -5,7 +5,7 @@ import { FaCaretDown } from 'react-icons/fa';
 import {HiMenuAlt3 } from 'react-icons/hi';
 import { FaRegWindowClose } from "react-icons/fa";
 import { Icon } from 'react-icons-kit';
-import { shoppingCart } from 'react-icons-kit/feather/shoppingCart';
+import { lock } from 'react-icons-kit/feather/lock';
 import ResponsiveMenu from "./ResponsiveMenu";
 
 const DropdownLinks = [
@@ -32,9 +32,9 @@ const Navbar = ({ usee, totalQty }) => {
 
   return (
     <>
-      <div className='fixed top-0 right-0 w-full bg-gray-900 text-white shadow-md z-[99999] font-sans antialiased'>
+      <div className='fixed top-0 right-0 w-full bg-white text-blue shadow-md z-[99999] font-sans antialiased'>
         {/* Top Bar (Optional) */}
-        <div className="bg-gradient-to-r from-primary to-secondary text-white">
+        <div className="bg-gradient-to-r from-primary to-secondary text-blue hover ">
           <div className="container py-[2px] sm:block hidden">
             <div className='flex justify-between'>
               <p>20% off on next booking</p>
@@ -44,7 +44,7 @@ const Navbar = ({ usee, totalQty }) => {
         </div>
 
         {/* Main Navbar */}
-        <div className="container py-3 sm:py-0 bg-gray-900">
+        <div className="container py-3 sm:py-0 bg-white">
           <div className="flex justify-between items-center">
             {/* Logo Section */}
             <div>
@@ -124,11 +124,11 @@ const Navbar = ({ usee, totalQty }) => {
                 <NavLink  
                   to="/cart" 
                   onClick={() => window.scrollTo(0, 0)} 
-                  className="text-[#009c9f] transform transition-transform duration-300 hover:scale-110"
+                  className="text-[#404040] transform transition-transform duration-300 hover:scale-110"
                 >
-                  <Icon icon={shoppingCart} size={30} />
+                  <Icon icon={lock} size={30}/>
                 </NavLink>
-                <span className='cart-indicator'>{totalQty}</span>
+                {/* <span className='cart-indicator'>{totalQty}</span> */}
               </div>
 
               {/* Mobile Hamburger Menu */}
@@ -138,12 +138,15 @@ const Navbar = ({ usee, totalQty }) => {
                     onClick={toggleMenu}
                     className="cursor-pointer transition-all text-white"
                     size={30}
+                    color='black'
+                    
                   />
                 ) : (
                   <HiMenuAlt3
                     onClick={toggleMenu}
                     className="cursor-pointer transition-all text-white"
                     size={30}
+                    color='black'
                   />
                 )}
               </div>

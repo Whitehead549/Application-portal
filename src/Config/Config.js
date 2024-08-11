@@ -4,13 +4,13 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDYqnCW4kXrvrqMBJmk95NHrum2eMPKMPA",
-  authDomain: "triplea-5.firebaseapp.com",
-  projectId: "triplea-5",
-  storageBucket: "triplea-5.appspot.com",
-  messagingSenderId: "562360371319",
-  appId: "1:562360371319:web:2c8b3397bf3fa425829e72",
-  measurementId: "G-9MDKQG416P"
+  apiKey: "AIzaSyDhwXYHLwzlv6qbRfJ7-FS3j5lzidvVxjw",
+  authDomain: "fir-d557f.firebaseapp.com",
+  projectId: "fir-d557f",
+  storageBucket: "fir-d557f.appspot.com",
+  messagingSenderId: "1093123300541",
+  appId: "1:1093123300541:web:e84ca83ddd7ee405a8ebd4",
+  measurementId: "G-K3V3JQH22D"
 };
 
 // Initialize Firebase
