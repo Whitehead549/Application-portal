@@ -53,11 +53,11 @@ const Home = () => {
         
       
         <>
-        <div className="relative h-[46vh] md:h-[36vh] lg:h-[70vh] sm:h-[60vh]">
+        <div className="relative h-[46vh] md:h-[32vh] lg:h-[70vh] sm:h-[60vh] bg-white bg-opacity-90">
   <img
     src={MainImage}
     alt="Description"
-    className="absolute inset-0 w-full h-full object-fit lg:pt-16  "
+    className="absolute inset-0 w-full h-full object-fit lg:pt-16 bg-white bg-opacity-90"
   />
   <Hero />
 </div>
