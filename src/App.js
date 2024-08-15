@@ -7,7 +7,7 @@ import NoPage from './pages/NoPage';
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Cart from './pages/Cart';
-import { AddProducts } from './pages/AddProduct';
+import { ApplicantForm } from './pages/ApplicantForm';
 
 
 
@@ -29,7 +29,7 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/cart" element={<Cart/>  } />
-          <Route path="/admin" element={<AddProducts/>  } />
+          <Route path="/admin" element={<ApplicantForm/>  } />
           {/* <Route path="/login" element={<Login/>  } />
           <Route path="/signup" element={<Signup/>  } /> */}
           <Route path="*" element={<NoPage />} />

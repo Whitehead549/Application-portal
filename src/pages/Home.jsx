@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import LoaderSpinner from './LoaderSpinner';
 import Signup from '../components/popups/SignUp';
 import Popup from './Popup';
+import Stepper from '../components/stepper/Stepper';
 
 const Home = () => {
   // getting current user function
@@ -53,26 +54,28 @@ const Home = () => {
         
       
         <>
-        <div className="relative h-[46vh] md:h-[32vh] lg:h-[70vh] sm:h-[60vh] bg-white bg-opacity-90">
-  <img
-    src={MainImage}
-    alt="Description"
-    className="absolute inset-0 w-full h-full object-fit lg:pt-16 bg-white bg-opacity-90"
-  />
-  <Hero />
-</div>
+          <div className="relative h-[46vh] md:h-[32vh] lg:h-[70vh] sm:h-[60vh] bg-white bg-opacity-90">
+            <img
+              src={MainImage}
+              alt="Description"
+              className="absolute inset-0 w-full h-full object-fit lg:pt-16 bg-white bg-opacity-90"
+            />
+            <Hero />
+          </div>
+          <div>
+            <Stepper/>
+          </div>
 
 
-           
-           <div className='pt-2 bg-night-sky'>
-          <Places  />
-           </div>
-           {
-             user === null && (
-              <div className="fixed inset-0 flex items-center justify-center bg-gray bg-opacity-50">
-                  <Popup />
-              </div>
-           )}
+            
+            <div className='pt-2 '>
+             <Places  />
+            </div>
+            {user === null && (
+                <div className="fixed inset-0 flex items-center justify-center bg-gray bg-opacity-50">
+                    <Popup />
+                </div>
+            )}
 
         </>
       

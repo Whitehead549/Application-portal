@@ -5,6 +5,19 @@ module.exports = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'dots': 'radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px)'
+      },
+      backgroundSize: {
+        'dots': '20px 20px'
+      },
+      fontFamily: {
+        roboto: ['Roboto', 'sans-serif'],
+      },
+      boxShadow: {
+        myShadow1: "4.1px -5px 0 0 rgb(17,24,39)",
+        myShadow2: "-4.1px -5px 0 0 rgb(17,24,39)",
+      },
       colors: {
         primary: '#1a202c',  // replace with your primary color
         secondary: '#2d3748',  // replace with your secondary color
@@ -25,6 +38,9 @@ module.exports = {
       },
       backgroundImage: {
         'night-sky': 'linear-gradient(180deg, #000a1a, #000a1a, #000a1a)', // Customize the colors as needed
+        'dark-blue': 'linear-gradient(180deg, #002a54, #003366, #002a54)'
+
+
       },
     },
   },
