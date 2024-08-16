@@ -3,7 +3,7 @@ import { collection, where, getDocs, setDoc, doc, query, updateDoc, onSnapshot, 
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { v4 as uuidv4 } from 'uuid';
 import { auth, db } from '../Config/Config';
-import MainVid from "../assets/video/main.mp4";
+
 import Hero from "../components/Hero/Hero";
 import Places from '../components/Places/Places';
 import Navbar from '../components/Navbar/Navbar';
