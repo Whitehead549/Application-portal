@@ -14,7 +14,7 @@ const Layout = () => {
       <div className="flex-grow">
         <Outlet />
       </div>
-      <Footer className="fixed bottom-0 w-full bg-gray-800 text-white text-center py-4" />
+
       <ToastContainer
         position="top-right"
         autoClose={5000}

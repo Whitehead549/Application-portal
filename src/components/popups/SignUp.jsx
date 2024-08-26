@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -14,6 +15,7 @@ const Signup = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false); // State for loading indicator
+  const [passwordVisible, setPasswordVisible] = useState(false); // State for password visibility
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -38,7 +40,7 @@ const Signup = () => {
 
       setTimeout(() => {
         setSuccessMsg('');
-        navigate('/login');
+        navigate('/');
       }, 3000);
     } catch (error) {
       if (error.code === 'auth/invalid-email') {
@@ -55,22 +57,26 @@ const Signup = () => {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
   return (
-    <div className=" rounded-lg p-8 shadow-lg max-w-md w-full bg-white style={{ background: 'rgb(211, 211, 211)' }}">
-      <h1 className="text-3xl font-semibold mb-4">SignUp</h1>
-      <hr className="mb-4" />
+    <div className="p-2 max-w-md w-full" style={{ background: 'rgb(211, 211, 211)' }}>
+      <h1 className="text-xl font-semibold mb-2 text-center">Sign up</h1>
+      <hr className="mb-2" />
       {successMsg && (
-        <div className="bg-green-100 text-green-700 p-3 mb-4 rounded">{successMsg}</div>
+        <div className="bg-green-100 text-green-700 p-2 mb-2 rounded">{successMsg}</div>
       )}
-      <form className="space-y-4" autoComplete="off" onSubmit={handleSignup}>
+      <form className="space-y-3" autoComplete="off" onSubmit={handleSignup}>
         <div>
           <label htmlFor="fullName" className="block mb-1">
-            Full Name
+            Username
           </label>
           <input
             id="fullName"
             type="text"
-            className="form-input w-full px-3 py-2 border rounded bg-gray-200"
+            className="form-input w-full px-2 py-1 border rounded bg-gray-200"
             required
             onChange={(e) => setFullName(e.target.value)}
             value={fullName}
@@ -83,41 +89,47 @@ const Signup = () => {
           <input
             id="email"
             type="email"
-            className="form-input w-full px-3 py-2 border rounded bg-gray-200"
+            className="form-input w-full px-2 py-1 border rounded bg-gray-200"
             required
             onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
         </div>
         <div>
-          <label htmlFor="password" className="block mb-1">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            className="form-input w-full px-3 py-2 border rounded bg-gray-200"
-            required
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-          />
-        </div>
+                <label htmlFor="password" className="block mb-1">
+                    Password
+                </label>
+                <div className="relative">
+                    <input
+                        id="password"
+                        type={passwordVisible ? "text" : "password"}
+                        className="form-input w-full px-3 py-2 border rounded bg-gray-200"
+                        required
+                        onChange={(e) => setPassword(e.target.value)}
+                        value={password}
+                    />
+                    <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        className="absolute right-2 top-2 text-gray-600"
+                    >
+                        {passwordVisible ? "🙈" : "👁️"}
+                    </button>
+                </div>
+            </div>
         <div className="flex justify-between items-center">
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            disabled={loading} // Disable button while loading
-          >
-            {loading ? (
-              <LoaderSpinner /> // Show LoaderSpinner while loading
-            ) : (
-              'SignUp'
-            )}
-          </button>
+         <button
+          type="submit"
+          className={`bg-blue-500 text-white px-3 py-1 rounded ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
+          disabled={loading} // Disable button while loading
+        >
+          {loading ? <LoaderSpinner /> : 'Sign up'}
+        </button>
+
         </div>
       </form>
       {errorMsg && (
-        <div className="bg-red-100 text-red-700 p-3 mt-4 rounded">{errorMsg}</div>
+        <div className="bg-red-100 text-red-700 p-2 mt-2 rounded">{errorMsg}</div>
       )}
     </div>
   );

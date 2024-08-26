@@ -37,7 +37,7 @@ const ResponsiveMenu = ({ showMenu, setShowMenu, usee }) => {
 
   const handleLogout = () => {
     auth.signOut().then(() => {
-      navigate('/login');
+      navigate('/');
     });
   };
 

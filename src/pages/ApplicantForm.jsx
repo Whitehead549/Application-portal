@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { storage, db } from '../Config/Config';
-import { collection, addDoc } from 'firebase/firestore';
+import { auth, storage, db } from '../Config/Config';
+import { collection, addDoc, getDocs, where, query } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css'; // Import the CSS for styling
@@ -40,7 +40,7 @@ export const ApplicantForm = () => {
     const [uploadError, setUploadError] = useState('');
 
     const handleResumeUpload = (e) => {
-        let selectedFile = e.target.files[0];
+        const selectedFile = e.target.files[0];
         if (selectedFile) {
             setResume(selectedFile);
             setUploadError('');
@@ -51,7 +51,7 @@ export const ApplicantForm = () => {
     };
 
     const handleCertificationsUpload = (e) => {
-        let selectedFile = e.target.files[0];
+        const selectedFile = e.target.files[0];
         if (selectedFile) {
             setCertifications(selectedFile);
         } else {
@@ -61,92 +61,100 @@ export const ApplicantForm = () => {
 
     const handleSubmitForm = (e) => {
         e.preventDefault();
-        const storageRefResume = ref(storage, `resumes/${firstName}-${lastName}-${Date.now()}`);
-        const storageRefCertifications = certifications ? ref(storage, `certifications/${firstName}-${lastName}-${Date.now()}`) : null;
 
-        const uploadTasks = [];
-        uploadTasks.push(uploadBytes(storageRefResume, resume));
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                try {
+                    const q = query(collection(db, 'users'), where('uid', '==', user.uid));
+                    const userData = await getDocs(q);
+                    const storageRefResume = ref(storage, `resumes/${firstName}-${lastName}-${Date.now()}`);
+                    const storageRefCertifications = certifications ? ref(storage, `certifications/${firstName}-${lastName}-${Date.now()}`) : null;
 
-        if (certifications) {
-            uploadTasks.push(uploadBytes(storageRefCertifications, certifications));
-        }
+                    const uploadTasks = [uploadBytes(storageRefResume, resume)];
 
-        Promise.all(uploadTasks)
-            .then(results => {
-                const resumeUrlPromise = getDownloadURL(storageRefResume);
-                const certificationsUrlPromise = certifications ? getDownloadURL(storageRefCertifications) : Promise.resolve('');
+                    if (certifications) {
+                        uploadTasks.push(uploadBytes(storageRefCertifications, certifications));
+                    }
 
-                return Promise.all([resumeUrlPromise, certificationsUrlPromise]);
-            })
-            .then(([resumeUrl, certificationsUrl]) => {
-                return addDoc(collection(db, `applicants`), {
-                    firstName,
-                    lastName,
-                    address,
-                    phoneNumber,
-                    email,
-                    dateOfBirth,
-                    jobTitle,
-                    employmentStartDate,
-                    employmentEndDate,
-                    responsibilities,
-                    school,
-                    degree,
-                    fieldOfStudy,
-                    graduationYear,
-                    certificationsUrl,
-                    projects,
-                    resumeUrl,
-                    linkedInProfile,
-                    references
-                });
-            })
-            .then(() => {
-                setSuccessMsg('Application submitted successfully');
-                setFirstName('');
-                setLastName('');
-                setAddress('');
-                setPhoneNumber('');
-                setEmail('');
-                setDateOfBirth('');
-                setJobTitle('');
-                setEmploymentStartDate('');
-                setEmploymentEndDate('');
-                setResponsibilities('');
-                setSchool('');
-                setDegree('');
-                setFieldOfStudy('');
-                setGraduationYear('');
-                setCertifications(null);
-                setProjects('');
-                setSkills('');
-                setLinkedInProfile('');
-                setReferences('');
-                document.getElementById('resume').value = '';
-                document.getElementById('certifications').value = '';
-                setUploadError('');
-                setTimeout(() => {
-                    setSuccessMsg('');
-                }, 3000);
-            })
-            .catch((error) => {
-                setUploadError(error.message);
-            });
+                    const results = await Promise.all(uploadTasks);
+                    const resumeUrl = await getDownloadURL(storageRefResume);
+                    const certificationsUrl = certifications ? await getDownloadURL(storageRefCertifications) : '';
+
+                    await addDoc(collection(db, 'applicants'), {
+                        uid: userData.docs[0].data().uid,
+                        Name: userData.docs[0].data().fullName,
+                        Email: userData.docs[0].data().email,
+                        firstName,
+                        lastName,
+                        address,
+                        phoneNumber,
+                        email,
+                        dateOfBirth,
+                        jobTitle,
+                        employmentStartDate,
+                        employmentEndDate,
+                        responsibilities,
+                        school,
+                        degree,
+                        fieldOfStudy,
+                        graduationYear,
+                        certificationsUrl,
+                        projects,
+                        resumeUrl,
+                        linkedInProfile,
+                        references,
+                    });
+
+                    setSuccessMsg('Application submitted successfully');
+                    resetForm();
+                } catch (error) {
+                    setUploadError(error.message);
+                }
+            }
+        });
+    };
+
+    const resetForm = () => {
+        setFirstName('');
+        setLastName('');
+        setAddress('');
+        setPhoneNumber('');
+        setEmail('');
+        setDateOfBirth('');
+        setJobTitle('');
+        setEmploymentStartDate('');
+        setEmploymentEndDate('');
+        setResponsibilities('');
+        setSchool('');
+        setDegree('');
+        setFieldOfStudy('');
+        setGraduationYear('');
+        setCertifications(null);
+        setProjects('');
+        setSkills('');
+        setLinkedInProfile('');
+        setReferences('');
+        setResume(null);
+        document.getElementById('resume').value = '';
+        document.getElementById('certifications').value = '';
+        setTimeout(() => {
+            setSuccessMsg('');
+        }, 3000);
     };
 
     return (
-        <div className='container mx-auto p-6 bg-gray-100'>
+        <div className='container mx-auto p-6 bg-gray-300 p-16 mt-[6rem] rounded-xl'>
             <h1 className='text-3xl font-bold mb-6 text-center'>Application Form</h1>
             {successMsg && (
                 <div className='bg-green-100 text-green-700 p-4 rounded mb-6'>
                     {successMsg}
                 </div>
             )}
-            {/* {uploadError && (
+            {uploadError && (
                 <div className='bg-red-100 text-red-700 p-4 rounded mb-6'>
                     {uploadError}
                 </div>
-            )} */}
+            )}
             <form autoComplete="off" onSubmit={handleSubmitForm} className='space-y-8'>
                 {/* Personal Information */}
                 <section>
@@ -249,10 +257,10 @@ export const ApplicantForm = () => {
                                 value={employmentEndDate}
                             />
                         </div>
-                        <div className='col-span-2'>
+                        <div className='md:col-span-2'>
                             <label className='block text-gray-700'>Responsibilities</label>
                             <textarea
-                                className='form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
+                                className='form-textarea mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
                                 required
                                 onChange={(e) => setResponsibilities(e.target.value)}
                                 value={responsibilities}
@@ -266,21 +274,14 @@ export const ApplicantForm = () => {
                     <h2 className='text-2xl font-semibold mb-4'>Education</h2>
                     <div className='grid md:grid-cols-2 gap-6'>
                         <div>
-                            <label className='block text-gray-700'>Highest Level of Education Completed</label>
-                            <select
-                                className='form-select mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
+                            <label className='block text-gray-700'>Degree</label>
+                            <input
+                                type="text"
+                                className='form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
                                 required
                                 onChange={(e) => setDegree(e.target.value)}
                                 value={degree}
-                            >
-                                <option value="">Select your education level</option>
-                                <option value="High School">High School</option>
-                                <option value="Associate Degree">Associate Degree</option>
-                                <option value="Bachelor's Degree">Bachelor's Degree</option>
-                                <option value="Master's Degree">Master's Degree</option>
-                                <option value="PhD">PhD</option>
-                                <option value="Other">Other</option>
-                            </select>
+                            />
                         </div>
                         <div>
                             <label className='block text-gray-700'>Field of Study</label>
@@ -293,7 +294,7 @@ export const ApplicantForm = () => {
                             />
                         </div>
                         <div>
-                            <label className='block text-gray-700'>Institution Name</label>
+                            <label className='block text-gray-700'>School</label>
                             <input
                                 type="text"
                                 className='form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
@@ -312,21 +313,21 @@ export const ApplicantForm = () => {
                                 value={graduationYear}
                             />
                         </div>
-                        <div className='md:col-span-2'>
-                            <label className='block text-gray-700'>Certifications or Additional Training</label>
+                        <div>
+                            <label className='block text-gray-700'>Certifications (if any)</label>
                             <input
                                 type="file"
+                                id="certifications"
                                 className='form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
-                                onChange={(e) => handleCertificationsUpload(e)}
+                                onChange={handleCertificationsUpload}
                             />
                         </div>
                         <div className='md:col-span-2'>
-                            <label className='block text-gray-700'>Special Projects or Achievements</label>
+                            <label className='block text-gray-700'>Projects or Achievements</label>
                             <textarea
-                                className='form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
+                                className='form-textarea mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
                                 onChange={(e) => setProjects(e.target.value)}
                                 value={projects}
-                                placeholder="Mention any significant projects, awards, or honors"
                             />
                         </div>
                     </div>
@@ -336,51 +337,53 @@ export const ApplicantForm = () => {
                 <section>
                     <h2 className='text-2xl font-semibold mb-4'>Skills and Qualifications</h2>
                     <textarea
-                        className='form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
+                        className='form-textarea mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
+                        required
                         onChange={(e) => setSkills(e.target.value)}
                         value={skills}
-                        placeholder="List your skills and qualifications"
                     />
                 </section>
 
                 {/* Additional Information */}
                 <section>
                     <h2 className='text-2xl font-semibold mb-4'>Additional Information</h2>
-                    <div className='mb-4'>
-                        <label className='block text-gray-700'>Resume</label>
-                        <input
-                            type="file"
-                            id="resume"
-                            className='form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
-                            onChange={handleResumeUpload}
-                            required
-                        />
-                    </div>
-                    <div className='mb-4'>
-                        <label className='block text-gray-700'>LinkedIn Profile (optional)</label>
-                        <input
-                            type="url"
-                            className='form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
-                            onChange={(e) => setLinkedInProfile(e.target.value)}
-                            value={linkedInProfile}
-                            placeholder="https://www.linkedin.com/in/your-profile"
-                        />
-                    </div>
-                    <div className='mb-4'>
-                        <label className='block text-gray-700'>References</label>
-                        <textarea
-                            className='form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
-                            onChange={(e) => setReferences(e.target.value)}
-                            value={references}
-                            placeholder="Provide contact details or names of references"
-                        />
+                    <div className='grid md:grid-cols-2 gap-6'>
+                        <div>
+                            <label className='block text-gray-700'>Resume</label>
+                            <input
+                                type="file"
+                                id="resume"
+                                className='form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
+                                required
+                                onChange={handleResumeUpload}
+                            />
+                        </div>
+                        <div>
+                            <label className='block text-gray-700'>LinkedIn Profile (Optional)</label>
+                            <input
+                                type="url"
+                                placeholder="https://www.linkedin.com/in/your-profile"
+                                className='form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
+                                onChange={(e) => setLinkedInProfile(e.target.value)}
+                                value={linkedInProfile}
+                            />
+                        </div>
+                        <div className='md:col-span-2'>
+                            <label className='block text-gray-700'>References</label>
+                            <textarea
+                                className='form-textarea mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
+                                required
+                                onChange={(e) => setReferences(e.target.value)}
+                                value={references}
+                            />
+                        </div>
                     </div>
                 </section>
 
                 <div className='flex justify-center'>
                     <button
                         type="submit"
-                        className='bg-blue-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 focus:ring-2 focus:ring-blue-500'
+                        className='bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
                     >
                         Submit Application
                     </button>
@@ -389,6 +392,4 @@ export const ApplicantForm = () => {
         </div>
     );
 };
-
-
 

@@ -12,8 +12,8 @@ const Popup = () => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-35">
-      <div className="rounded-lg p-6 shadow-lg max-w-md lg:w-full sm:w-full" style={{ background: 'rgb(211, 211, 211)' }}>
+    <div className="py-[16rem] fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-35">
+      <div className="rounded-lg p-4 shadow-lg max-w-md lg:w-full sm:w-full" style={{ background: 'rgb(211, 211, 211)' }}>
         {showLogin ? (
           <>
             <Login />
@@ -23,7 +23,7 @@ const Popup = () => {
                 onClick={handleToggle}
                 className="text-blue-500 font-semibold underline"
               >
-                Sign up here
+                Create one!
               </button>
             </div>
           </>
@@ -36,7 +36,7 @@ const Popup = () => {
                 onClick={handleToggle}
                 className="text-blue-500 font-semibold underline"
               >
-                Login here
+                Sign in 
               </button>
             </div>
           </>
