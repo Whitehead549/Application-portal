@@ -6,64 +6,53 @@ import {
   FaLocationArrow,
   FaMobileAlt,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
-
-const FooterLinks = [
-  {
-    title: "Home",
-    link: "/",
-  },
-  {
-    title: "Admin",
-    link: "/Admin",
-  },
-  {
-    title: "Blogs",
-    link: "/blogs",
-  },
-];
 
 const Footer = () => {
   return (
-    <>
-      <div className="py-2 bg-gray-200 relative overflow-hidden">
-        <div className="grid md:grid-cols-3 py-1 backdrop-blur-sm rounded-t-xl">
-          <div className="py-2 px-4">
-            <h1 className="flex items-center gap-2 text-lg sm:text-2xl font-bold text-justify sm:text-left">
-              TripleA wears
-            </h1>
-            <p className="text-sm mt-2">
-              Discover the latest trends, top brands, and unbeatable prices.
-              Shop now and elevate your style with the perfect pair!
+    <footer className="bg-gray-200 py-0">
+      <div className="container mx-auto px-4 lg:px-12 py-4">
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start">
+          {/* Company Info Section */}
+          <div className="flex-1 mb-4 lg:mb-0">
+            <h1 className="text-2xl font-bold mb-2">Hitachivista</h1>
+            <p className="text-sm mb-4">
+            Empowering candidates with expert training and guaranteed job placement. Start your career journey with us today and secure your future!
             </p>
-            <div className="flex items-center gap-2 mt-2">
-              <FaLocationArrow />
-              <p>TripleA</p>
+            <div className="flex items-center text-sm mb-2">
+              <FaLocationArrow className="mr-2" />
+              <p>Hitachivista</p>
             </div>
-            <div className="flex items-center gap-2 mt-1">
-              <FaMobileAlt />
-              <p>+234 8052875298</p>
+            <div className="flex items-center text-sm">
+              <FaMobileAlt className="mr-2" />
+              <p>hitachivista@gmail.com</p>
             </div>
-            <div className="flex items-center gap-2 mt-2">
-              <a href="#">
-                <FaInstagram className="text-2xl" />
+          </div>
+
+          {/* Social Media Section */}
+          <div className="flex-1 mb-4 lg:mb-0 flex justify-center lg:justify-end">
+            <div className="flex space-x-4">
+              <a href="#" aria-label="Instagram" className="text-2xl hover:text-gray-600">
+                <FaInstagram />
               </a>
-              <a href="#">
-                <FaFacebook className="text-2xl" />
+              <a href="#" aria-label="Facebook" className="text-2xl hover:text-gray-600">
+                <FaFacebook />
               </a>
-              <a href="#">
-                <FaLinkedin className="text-2xl" />
+              <a href="#" aria-label="LinkedIn" className="text-2xl hover:text-gray-600">
+                <FaLinkedin />
               </a>
             </div>
           </div>
-         
-        </div>
-        <div className="text-center py-1 border-t-2 border-gray-300/50 bg-gray-800 text-white text-sm">
-          © 2024 All rights reserved || Made with ❤️ by CodeMutation
         </div>
       </div>
-    </>
+
+      <div className="bg-gray-800 text-white text-center py-2 mb-0">
+        <p className="text-sm">
+          © 2024 All rights reserved
+        </p>
+      </div>
+    </footer>
   );
 };
 
 export default Footer;
+

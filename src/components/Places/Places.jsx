@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
 import { collection, where, getDocs, setDoc, doc, query, updateDoc, onSnapshot, addDoc } from 'firebase/firestore';
 import { auth, db } from '../../Config/Config';
-
+import { useNavigate } from 'react-router-dom';
 
 
 // Order status helper function
@@ -86,55 +86,36 @@ const recentOrderData = [
 ];
 
 
-
 export default function Places() {
-  // user_data
-  const [member, setMember] = useState([]);
+  const [member, setMember] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-useEffect(() => {
-  const fetchMemberData = async () => {
-    try {
-      const user = auth.currentUser;
-      if (user) {
-        const memberRef = query(collection(db, "applicants"), where("uid", "==", user.uid));
-        const querySnapshot = await getDocs(memberRef);
-        const memberArray = querySnapshot.docs.map(doc => ({ ...doc.data() }));
+  useEffect(() => {
+    const fetchMemberData = async () => {
+      setIsLoading(true);
+      try {
+        auth.onAuthStateChanged(async (user) => {
+          if (user) {
+            const memberRef = query(collection(db, "applicants"), where("uid", "==", user.uid));
+            const querySnapshot = await getDocs(memberRef);
 
-        if (memberArray.length > 0) {
-          setMember(memberArray);       
-        } else {
-          // Handle case when there are no documents
-          setMember([]); // or handle it differently if needed
-          // Optionally set an informative message or take another action
-          console.log('No members found.');
-        }
+            if (!querySnapshot.empty) {
+              setMember(querySnapshot.docs[0].data());
+            } else {
+              console.log('No user found.');
+            }
+          }
+        });
+      } catch (error) {
+        setError('Error fetching member, check your internet connection');
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      setError('Error fetching member, check your internet connection');
-    }
-  }})
+    };
 
-// console.log(member);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    fetchMemberData();
+  }, []);
 
   const tableContainerRef = useRef(null);
 
@@ -144,8 +125,68 @@ useEffect(() => {
     }
   };
 
+  const navigate = useNavigate();
+
   return (
+    <>
+         {member && ( <div className="flex flex-col justify-center items-center text-lg text-gray-800 p-4 bg-blue-50 border border-gray-300 rounded-md">
+            <p>
+            <span className="mr-2 text-2xl">🎉</span>
+            Congratulations, <span className="font-bold text-blue-600 mx-1">{member.firstName}</span>! Our AI system has successfully approved your application.
+                Proceed to request your AD credentials (login and password) for your AWS workspace.
+            </p>
+            <button 
+                className="mt-4 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none"
+                onClick={() => navigate('/subscribe')}
+            >
+                Proceed
+            </button>
+        </div>) }
+
     <div className="bg-white px-4 pt-3 pb-4 rounded-sm border border-gray-200 flex-1">
+      <strong className="text-gray-700 font-medium">User</strong>
+      <div className="relative">
+        <div
+          ref={tableContainerRef}
+          className="border-x border-gray-200 rounded-sm mt-3 overflow-x-auto flex items-center"
+        >
+          <table className="min-w-full text-gray-700">
+            <thead>
+              <tr className="bg-gray-100 text-left">
+                <th className="px-4 py-2 border-b text-sm font-medium">ID</th>
+                <th className="px-4 py-2 border-b text-sm font-medium">Name</th>
+                <th className="px-4 py-2 border-b text-sm font-medium">Screening Status</th>
+                <th className="px-4 py-2 border-b text-sm font-medium">Address</th>
+              </tr>
+            </thead>
+            <tbody>
+              {member ? (
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-2 border-b text-sm">#{member.id}</td>
+                  <td className="px-4 py-2 border-b text-sm">{member.firstName}</td>
+                  <td className="px-8 py-2 border-b text-sm">{getOrderStatus('Approved')}</td>
+                  <td className="px-4 py-2 border-b text-sm">{member.address}</td>
+                </tr>
+              ) : (
+                <tr>
+                  <td colSpan="5" className="px-4 py-2 text-center">
+                    Loading...
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <button
+          onClick={scrollToRight}
+          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full"
+          aria-label="Scroll right"
+        >
+          <FaArrowRight className="text-gray-700 lg:hidden md:hidden" />
+        </button>
+      </div>
+
+
       <strong className="text-gray-700 font-medium">Teammates</strong>
       <div className="relative">
         <div
@@ -157,7 +198,6 @@ useEffect(() => {
               <tr className="bg-gray-100 text-left">
                 <th className="px-4 py-2 border-b text-sm font-medium">ID</th>
                 <th className="px-4 py-2 border-b text-sm font-medium">Name</th>
-                <th className="px-4 py-2 border-b text-sm font-medium">Clearance Date</th>
                 <th className="px-4 py-2 border-b text-sm font-medium">Screening Status</th>
                 <th className="px-4 py-2 border-b text-sm font-medium">Address</th>
               </tr>
@@ -172,9 +212,7 @@ useEffect(() => {
                     <td className="px-4 py-2 border-b text-sm">
                       <Link to={`/customer/${order.customer_id}`}>{order.customer_name}</Link>
                     </td>
-                    <td className="px-4 py-2 border-b text-sm">
-                      {format(new Date(order.order_date), 'dd MMM yyyy')}
-                    </td>
+                   
                     <td className="px-4 py-2 border-b text-sm">
                       {getOrderStatus(order.current_order_status)}
                     </td>
@@ -200,6 +238,7 @@ useEffect(() => {
         </button>
       </div>
     </div>
+    </>
   );
 }
 

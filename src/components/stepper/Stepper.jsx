@@ -3,11 +3,11 @@ import { TiTick } from "react-icons/ti";
 import { FaIdBadge } from "react-icons/fa";
 
 const Stepper = ({ user, lastName }) => {
-  const steps = ["Customer Info", "Shipping Info", "Membership"];
+  const steps = ["Sign up", "Application valid", "Membership"];
   const [currentStep, setCurrentStep] = useState(1);
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4">
+    <div className="w-full max-w-4xl mx-auto p-4 pt-8 pb-0">
       <div className="flex items-center justify-between">
         {steps.map((step, i) => (
           <React.Fragment key={i}>

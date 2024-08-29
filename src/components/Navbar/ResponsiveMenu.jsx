@@ -6,23 +6,23 @@ import { auth } from '../../Config/Config';
 
 const navbarLinks = [
   {
-    name: "Home",
+    name: "Application Portal",
     link: "/",
     id: 1,
   },
   {
-    name: "About",
-    link: "/about",
+    name: " AD Credentials",
+    link: "/credentials",
     id: 2,
   },
   {
-    name: "Blogs",
-    link: "/blogs",
+    name: " Contact",
+    link: "/contact",
     id: 3,
   },
   {
-    name: "Login",
-    link: "/login",
+    name: " FAQ",
+    link: "/faq",
     id: 4,
   },
   {

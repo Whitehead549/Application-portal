@@ -1,17 +1,27 @@
 import React from 'react';
 import { FaCheck } from "react-icons/fa6";
 import { RiLock2Line } from "react-icons/ri";
+import BankDetails from './BankDetails';
+import { useState} from 'react';
+
 
 export const Plan = () => {
+
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const openPopup = () => setIsPopupOpen(true);
+  const closePopup = () => setIsPopupOpen(false);
+
+
   return (
     <div className="font-sans bg-gray-100 min-h-screen flex flex-col items-center pt-12 px-4">
       <div className="text-center font-semibold">
       <h1 className="text-3xl md:text-4xl lg:text-5xl">
-          <span className="text-blue-700 tracking-wide">Flexible </span>
+          <span className="text-blue-700 tracking-wide">One-time Payment </span>
           <span>Plans</span>
         </h1>
         <p className="text-lg text-gray-600 mb-12">
-          Choose a plan that works best for you and your team.
+          Choose a plan that works best for you.
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl w-full">
@@ -60,9 +70,12 @@ export const Plan = () => {
               <span className="text-gray-800">Post-Placement Support: Continued support after job placement.</span>
             </li>
           </ul>
-          <a href="#" className="bg-blue-600 text-white py-3 rounded-3xl text-center font-medium hover:bg-blue-700 transition">
+           <div className='bg-blue-600 text-white py-3 rounded-3xl text-center font-medium hover:bg-blue-700 transition'>
+          <button  onClick={openPopup} >
             Choose Plan
-          </a>
+          </button>
+          {isPopupOpen && <BankDetails onClose={closePopup} />} {/* Conditionally render the pop-up */}
+          </div>
         </div>
 
         {/* Standard Card */}
@@ -110,9 +123,12 @@ export const Plan = () => {
               <span className="text-gray-800">Post-Placement Support: Continued support after job placement.</span>
             </li>
           </ul>
-          <a href="#" className="bg-blue-600 text-white py-3 rounded-3xl text-center font-medium hover:bg-blue-700 transition">
+          <div className='bg-blue-600 text-white py-3 rounded-3xl text-center font-medium hover:bg-blue-700 transition'>
+          <button  onClick={openPopup}  >
             Choose Plan
-          </a>
+          </button>
+          {isPopupOpen && <BankDetails onClose={closePopup} />} {/* Conditionally render the pop-up */}
+          </div>
         </div>
 
         {/* Premium Card */}
@@ -160,9 +176,14 @@ export const Plan = () => {
               <span className="text-gray-800">Post-Placement Support: Continued support after job placement.</span>
             </li>
           </ul>
-          <a href="#" className="bg-blue-600 text-white py-3 rounded-3xl text-center font-medium hover:bg-blue-700 transition">
+
+          <div className='bg-blue-600 text-white py-3 rounded-3xl text-center font-medium hover:bg-blue-700 transition'>
+          <button  onClick={openPopup}  >
             Choose Plan
-          </a>
+          </button>
+          {isPopupOpen && <BankDetails onClose={closePopup} />} {/* Conditionally render the pop-up */}
+          </div>
+
         </div>
       </div>
     </div>

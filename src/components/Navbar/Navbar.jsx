@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from "react-router-dom";
-import LogoImg from "../../assets/logo.png"; 
+import LogoImg from "../../assets/AAA-01.png"; 
 import { FaCaretDown } from 'react-icons/fa';
-import {HiMenuAlt3 } from 'react-icons/hi';
+import { HiMenuAlt3 } from 'react-icons/hi';
 import { FaRegWindowClose } from "react-icons/fa";
 import { Icon } from 'react-icons-kit';
 import { lock } from 'react-icons-kit/feather/lock';
@@ -33,93 +33,93 @@ const Navbar = ({ usee, totalQty }) => {
   return (
     <>
       <div className='fixed top-0 right-0 w-full bg-white text-blue shadow-md z-[99999] font-sans antialiased'>
-        {/* Top Bar (Optional) */}
-        <div className="bg-gradient-to-r from-primary to-secondary text-blue hover ">
-          <div className="container py-[2px] sm:block hidden">
-            <div className='flex justify-between'>
-              <p>20% off on next booking</p>
-              <p>Mobile No. +234 8052875298</p>
-            </div>
-          </div>
-        </div>
+       
 
         {/* Main Navbar */}
         <div className="container py-3 sm:py-0 bg-white">
           <div className="flex justify-between items-center">
             {/* Logo Section */}
-            <div>
-              <Link to="/" onClick={() => window.scrollTo(0, 0)}>
-                <img src={LogoImg} alt='' className='h-14' />
-              </Link>
-            </div>
+            <div className="flex justify-center items-center p-4 sm:p-6 md:p-8 lg:p-4">
+  <Link to="/" onClick={() => window.scrollTo(0, 0)}>
+    <img 
+      src={LogoImg} 
+      alt='' 
+      className='h-7 sm:h-16 md:h-12 lg:h-12' 
+    />
+  </Link>
+</div>
+
 
             {/* Desktop Navlinks */}
-            <div className="hidden md:block">
-              <ul className='flex items-center gap-6'>
-                <li className='py-4'>
+            <div className="hidden md:flex items-center gap-6">
+              <ul className='flex items-center gap-8'>
+                <li>
                   <NavLink 
                     to="/" 
-                    className={({ isActive }) => isActive ? "active" : "hover:text-primary transition-colors duration-300"}
+                    className={({ isActive }) =>
+                      `relative py-2 px-4 font-medium text-gray-800 ${
+                        isActive
+                          ? 'text-primary border-b-2 border-primary'
+                          : 'hover:text-primary transition-colors duration-300'
+                      }`
+                    }
                     onClick={() => window.scrollTo(0, 0)}
                   >
-                    Home
+                    Application Portal
                   </NavLink>
                 </li>
-                <li className='py-4'>
+
+                <li>
                   <NavLink 
-                    to="/blogs"
-                    className={({ isActive }) => isActive ? "active" : "hover:text-primary transition-colors duration-300"}
+                    to="/credentials"
+                    className={({ isActive }) =>
+                      `relative py-2 px-4 font-medium text-gray-800 ${
+                        isActive
+                          ? 'text-primary border-b-2 border-primary'
+                          : 'hover:text-primary transition-colors duration-300'
+                      }`
+                    }
                     onClick={() => window.scrollTo(0, 0)}
                   >
-                    Blogs
+                    AD Credentials
                   </NavLink>
                 </li>
-                <li className='py-4'>
+          
+                <li>
                   <NavLink 
-                    to="/places"
-                    className={({ isActive }) => isActive ? "active" : "hover:text-primary transition-colors duration-300"}
+                    to="/contact"
+                    className={({ isActive }) =>
+                      `relative py-2 px-4 font-medium text-gray-800 ${
+                        isActive
+                          ? 'text-primary border-b-2 border-primary'
+                          : 'hover:text-primary transition-colors duration-300'
+                      }`
+                    }
                     onClick={() => window.scrollTo(0, 0)}
                   >
-                    Best Place
+                    Contact
                   </NavLink>
                 </li>
-                <li className='py-4'>
+                <li>
                   <NavLink 
-                    to="/about"
-                    className={({ isActive }) => isActive ? "active" : "hover:text-primary transition-colors duration-300"}
+                    to="/faq"
+                    className={({ isActive }) =>
+                      `relative py-2 px-4 font-medium text-gray-800 ${
+                        isActive
+                          ? 'text-primary border-b-2 border-primary'
+                          : 'hover:text-primary transition-colors duration-300'
+                      }`
+                    }
                     onClick={() => window.scrollTo(0, 0)}
                   >
-                    About
+                   FAQ
                   </NavLink>
-                </li>
-                {/* Dropdown */}
-                <li className="py-4 relative group cursor-pointer">
-                  <div className="dropdown flex items-center">
-                    <span className="hover:text-primary transition-colors duration-300">Quick Links</span>
-                    <span>
-                      <FaCaretDown className="transition-all duration-200 group-hover:rotate-180" />
-                    </span>
-                  </div>
-                  <div className="absolute -left-9 z-[9999] hidden w-[150px] rounded-md bg-white p-2 text-black group-hover:block shadow-md">
-                    <ul>
-                      {DropdownLinks.map((data) => (
-                        <li key={data.name}>
-                          <a
-                            className="inline-block w-full rounded-md p-2 hover:bg-primary/20 transition-colors duration-300" 
-                            href={data.link}
-                          >
-                            {data.name}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
                 </li>
               </ul>
             </div>
 
-            {/* Cart Products */}
-            <div className='flex items-center gap-4'>
+            {/* Cart and Menu Icons */}
+            <div className='flex items-center gap-6'>
               <div>
                 <NavLink  
                   to="/cart" 
@@ -128,7 +128,6 @@ const Navbar = ({ usee, totalQty }) => {
                 >
                   <Icon icon={lock} size={30}/>
                 </NavLink>
-                {/* <span className='cart-indicator'>{totalQty}</span> */}
               </div>
 
               {/* Mobile Hamburger Menu */}
@@ -139,7 +138,6 @@ const Navbar = ({ usee, totalQty }) => {
                     className="cursor-pointer transition-all text-white"
                     size={30}
                     color='black'
-                    
                   />
                 ) : (
                   <HiMenuAlt3
@@ -161,3 +159,4 @@ const Navbar = ({ usee, totalQty }) => {
 };
 
 export default Navbar;
+
